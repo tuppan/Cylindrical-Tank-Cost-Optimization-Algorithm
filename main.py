@@ -1,1 +1,1 @@
-helloworld ("print")
+print ("teste de miguel")

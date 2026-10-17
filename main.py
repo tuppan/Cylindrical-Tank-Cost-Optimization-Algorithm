@@ -2,10 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-alpha = 0.001
-mu = 1e6
+alpha = 1e-6
+mu = 10
 delta = 1e-5
-tol = 1e-6
+tol = 1e-2
+temp1 = 0.0
+temp2 = 0.0
 
 def cost_fcn(r, h):
     return 350 * (np.pi * r ** 2) + 100 * (2 * np.pi * r * h)
@@ -46,12 +48,15 @@ Partial derivative in respect to h
 If we freeze the radius and give a short step to the height, does the cost go up or down? And how fast?
 """
 def random_start():
-    r = rd.uniform(0.1, 30)
-    h = rd.uniform(0.1, 15)
+    r = rd.uniform(0.1, 12)
+    h = rd.uniform(0.1, 24)
     return r, h
 # Generate random values for r and h to start the optimization process.
 def gradient_method():
     r, h = random_start()
+    count = 0
+    temp1 = r
+    temp2 = h
     for i in range (1000000):
         dr = partial_r_derivative(r, h, mu, delta)
         dh = partial_h_derivative(r, h, mu, delta)
@@ -62,7 +67,23 @@ def gradient_method():
         h_new = h - alpha * dh
         r = r_new
         h = h_new
+        count += 1
         # In each iteration k, the tank dimensions are updated by subtracting a piece of the corresponding derivative
-    return cost_fcn(r, h), r, h
+    return cost_fcn(r, h), r, h, count, temp1, temp2
 
-TODO: Add the plotting function and main function
+def main():
+    reps = int(input("Number of iterations: "))
+    r_array = []
+    h_array = []
+    cost_array = []
+    count_array = []
+    for i in range(reps):
+        cost, r, h, count, temp1, temp2 = gradient_method()
+        r_array.append(r)
+        h_array.append(h)
+        cost_array.append(cost)
+        count_array.append(count)
+        print(f"Iteration {i+1}: Initial values (r, h) = ({temp1:.2f}, {temp2:.2f}), Initial volume = {np.pi * temp1**2 * temp2:.2f} Cost = {cost_array[-1]:.2f}, Final values (r, h) = ({r_array[-1]:.2f}, {h_array[-1]:.2f}), Final Volume = {np.pi * r_array[-1]**2 * h_array[-1]:.2f}, Iterations = {count_array[-1]}")
+if True:
+    main()
+

@@ -2,10 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-alpha = 1e-6
-mu = 10
-delta = 1e-5
-tol = 1e-2
+delta = 1e-6
+tol = 1e-3
 temp1 = 0.0
 temp2 = 0.0
 
@@ -53,11 +51,18 @@ def random_start():
     return r, h
 # Generate random values for r and h to start the optimization process.
 def gradient_method():
+    global mu, alpha
+    mu = 10
+    alpha = 1e-7
     r, h = random_start()
     count = 0
     temp1 = r
     temp2 = h
-    for i in range (1000000):
+    for i in range (2000000):
+        if i % 1000 == 0 and i > 0:
+            alpha *= 0.9
+            if restriction_fcn(r, h) > 0:
+                mu *= 1.1
         dr = partial_r_derivative(r, h, mu, delta)
         dh = partial_h_derivative(r, h, mu, delta)
         if np.sqrt(dr**2 + dh**2) < tol:

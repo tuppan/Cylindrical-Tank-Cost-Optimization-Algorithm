@@ -86,6 +86,50 @@ def gradient_method():
         
     return cost_fcn(r, h), r, h, count, temp1, temp2
 
+def plotting_fcn(r_array, h_array, cost_array):
+
+    # Create a figure with 2 rows and 2 columns of subplots.
+    # The top subplot will show the cost per run, and the bottom two subplots will show the radius and height per run.
+    runs = np.arange(1, len(cost_array) + 1)
+    fig = plt.figure(figsize=(12, 8))
+    gs = fig.add_gridspec(2, 2)
+    fig.subplots_adjust(left=0.09, right=0.97, top=0.93, bottom=0.08, hspace=0.3, wspace=0.22)
+    ax_cost = fig.add_subplot(gs[0, :])
+    ax_r = fig.add_subplot(gs[1, 0])
+    ax_h = fig.add_subplot(gs[1, 1])
+
+    # Top: cost as points only. Faded red line represents the lowest possible cost, and two highlighted points represent the lowest and highest costs.
+    ax_cost.plot(runs, cost_array, "o", color="tab:blue", markersize=5, label="Final cost")
+    ax_cost.axhline(42024.95, color="red", linestyle="-", alpha=0.4,
+                    label="Lowest possible cost = 42024.95")
+    ax_cost.plot(runs[np.argmin(cost_array)], cost_array[np.argmin(cost_array)], "o", color="red", markersize=9,
+                 zorder=5, label=f"Lowest achieved = {cost_array[np.argmin(cost_array)]:.2f}")
+    ax_cost.plot(runs[np.argmax(cost_array)], cost_array[np.argmax(cost_array)], "o", color="orange", markersize=9,
+                 zorder=5, label=f"Highest achieved = {cost_array[np.argmax(cost_array)]:.2f}")
+    ax_cost.set_title("Final cost per run")
+    ax_cost.set_xlabel("Iteration number")
+    ax_cost.set_ylabel("Cost")
+    ax_cost.ticklabel_format(useOffset=False, axis="y")
+    ax_cost.grid(True, linestyle=":", alpha=0.6)
+    ax_cost.legend()
+
+    # Bottom: r and h as lines only. Faded red line represents the average value, and the optimal points are shown with a red dot.
+    for ax, values, name, color in ((ax_r, r_array, "Radius r", "tab:green"),
+                                    (ax_h, h_array, "Height h", "tab:purple")):
+        ax.plot(runs, values, "-", color=color, linewidth=1.5, label=name)
+        ax.axhline(np.mean(values), color="red", linestyle="-", alpha=0.4,
+                   label=f"Average = {np.mean(values):.4f}")
+        ax.plot(runs[np.argmin(cost_array)], values[np.argmin(cost_array)], "o", color="red", markersize=9,
+                zorder=5, label=f"Optimal = {values[np.argmin(cost_array)]:.4f}")
+        ax.set_title(f"{name} per run")
+        ax.set_xlabel("Iteration number")
+        ax.set_ylabel(name)
+        ax.ticklabel_format(useOffset=False, axis="y")
+        ax.grid(True, linestyle=":", alpha=0.6)
+        ax.legend()
+
+    plt.show()
+
 def main():
     reps = int(input("Number of iterations: "))
     r_array = []
@@ -114,9 +158,11 @@ def main():
     print(f"Minimum cost = {np.min(cost_array):.4f}")
     print(f"Max cost = {np.max(cost_array):.4f}")
     print(f"Average (r, h) = ({np.mean(r_array):.2f}; {np.mean(h_array):.2f})")
-    print(f"Best (r, h) = ({r_array[np.argmin(cost_array)]:.2f}; {h_array[np.argmin(cost_array)]:.2f})")
+    print(f"Optimal (r, h) = ({r_array[np.argmin(cost_array)]:.2f}; {h_array[np.argmin(cost_array)]:.2f})")
     print(f"Explosions: {explosion_count}")
     # The average, minimum, and maximum costs, as well as the average and the optimal values of r and h, are printed.
+
+    plotting_fcn(r_array, h_array, cost_array)
 
 if True:
     main()

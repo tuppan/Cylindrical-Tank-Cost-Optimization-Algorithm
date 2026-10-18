@@ -60,7 +60,7 @@ def gradient_method():
     temp2 = h
     for i in range (1000000):
         if i % 1000 == 0 and i > 0:
-            alpha *= 0.9
+            alpha *= 0.95
             if restriction_fcn(r, h) > 0:
                 mu *= 2
         dr = partial_r_derivative(r, h, mu, delta)
@@ -88,20 +88,22 @@ def main():
     cost_array = []
     count_array = []
     explosion_count = 0
+    print("Iteration || Initial (r, h) ||   Cost   || Final (r, h) || Final Volume || Iterations")
     for i in range(reps):
         cost, r, h, count, temp1, temp2 = gradient_method()
         r_array.append(r)
         h_array.append(h)
         cost_array.append(cost)
-        if cost > 43000:
+        if cost > 42100:
             explosion_count += 1
         count_array.append(count)
-        print(f"Iteration {i+1}: Initial values (r, h) = ({temp1:.2f}, {temp2:.2f}), Initial volume = {np.pi * temp1**2 * temp2:.2f} Cost = {cost_array[-1]:.2f}, Final values (r, h) = ({r_array[-1]:.2f}, {h_array[-1]:.2f}), Final Volume = {np.pi * r_array[-1]**2 * h_array[-1]:.2f}, Iterations = {count_array[-1]}")
-        print("------------------------------------------------------------")
-    print("Average cost = ", np.mean(cost_array))
-    print("Minimum cost = ", np.min(cost_array))
-    print("Max cost = ", np.max(cost_array))
-    print("average dimensions (r, h)= ", np.mean(r_array), np.mean(h_array))
+        print(f"    {i+1}     ||  ({temp1:.2f}; {temp2:.2f}) || {cost_array[-1]:.2f} || ({r_array[-1]:.2f}; {h_array[-1]:.2f}) ||    {np.pi * r_array[-1]**2 * h_array[-1]:.2f}    || {count_array[-1]}")
+        print("-"*81)
+    print(f"Average cost = {np.mean(cost_array):.4f}")
+    print(f"Minimum cost = {np.min(cost_array):.4f}")
+    print(f"Max cost = {np.max(cost_array):.4f}")
+    print(f"Average (r, h) = ({np.mean(r_array):.2f}; {np.mean(h_array):.2f})")
+    print(f"Best (r, h) = ({r_array[np.argmin(cost_array)]:.2f}; {h_array[np.argmin(cost_array)]:.2f})")
     print(f"Explosions: {explosion_count}")
 
 if True:

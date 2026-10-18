@@ -1,6 +1,6 @@
 # Cylindrical Tank Cost Optimization Algorithm
 
-### Minimum-Cost Cylindrical Tank: Gradient Method with a Penalty Function
+## Minimum-Cost Cylindrical Tank: Gradient Method with a Penalty Function
 
 - Computational assignment for **(IPRJ, UERJ) Computational Modeling**. The program finds the radius `r` and height `h` of a cylindrical tank that **minimize construction cost** while holding a **minimum volume**.
 
@@ -28,11 +28,17 @@ $$g(r, h) = 500 - \pi r^2 h \le 0$$
 
 The loop stops when `r` and `h` change by less than `tol`. Every 1000 iterations, `α` is multiplied by 0.95, and `μ` is doubled if the restriction is still violated.
 
-Current parameters: `mu = 10`, `alpha = 1e-6`, `delta = 1e-6`, `tol = 1e-7`, at most 1,000,000 iterations per run.
+Current parameters: `mu = 10`, `alpha = 1e-6`, `delta = 1e-5`, `tol = 1e-7`, at most 1,000,000 iterations per run.
 
-## Running
+### Running
 
 ```terminal
 pip install numpy matplotlib
 python main.py
 ```
+
+### Expected result
+
+With `h = 500/(π r²)`, the cost depends only on `r`, and its minimum gives:
+
+**r ≈ 3.56 m, h ≈ 12.49 m, volume = 500 m³, minimum cost ≈ R$ 42,024.95**

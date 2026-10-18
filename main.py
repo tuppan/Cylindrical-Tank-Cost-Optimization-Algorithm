@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-delta = 1e-6
+delta = 1e-5
 tol = 1e-7
 temp1 = 0.0
 temp2 = 0.0

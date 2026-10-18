@@ -62,12 +62,15 @@ def gradient_method():
         if i % 1000 == 0 and i > 0:
             alpha *= 0.9
             if restriction_fcn(r, h) > 0:
-                mu *= 1.1
+                mu *= 2
         dr = partial_r_derivative(r, h, mu, delta)
         dh = partial_h_derivative(r, h, mu, delta)
 
         r_new = r - alpha * dr
         h_new = h - alpha * dh
+
+        r_new = max(0.1, r_new)
+        h_new = max(0.1, h_new)
 
         if abs(r_new - r) < tol and abs(h_new - h) < tol:
             break
@@ -85,15 +88,12 @@ def main():
     cost_array = []
     count_array = []
     explosion_count = 0
-    implosion_count = 0
     for i in range(reps):
         cost, r, h, count, temp1, temp2 = gradient_method()
         r_array.append(r)
         h_array.append(h)
-        if (np.pi * temp1**2 * temp2) < 500.0:
-            implosion_count += 1
         cost_array.append(cost)
-        if cost > 42800:
+        if cost > 43000:
             explosion_count += 1
         count_array.append(count)
         print(f"Iteration {i+1}: Initial values (r, h) = ({temp1:.2f}, {temp2:.2f}), Initial volume = {np.pi * temp1**2 * temp2:.2f} Cost = {cost_array[-1]:.2f}, Final values (r, h) = ({r_array[-1]:.2f}, {h_array[-1]:.2f}), Final Volume = {np.pi * r_array[-1]**2 * h_array[-1]:.2f}, Iterations = {count_array[-1]}")
@@ -103,7 +103,6 @@ def main():
     print("Max cost = ", np.max(cost_array))
     print("average dimensions (r, h)= ", np.mean(r_array), np.mean(h_array))
     print(f"Explosions: {explosion_count}")
-    print(f"Implosions: {implosion_count}")
 
 if True:
     main()

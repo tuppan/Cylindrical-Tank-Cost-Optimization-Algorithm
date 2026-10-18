@@ -28,7 +28,7 @@ $$g(r, h) = 500 - \pi r^2 h \le 0$$
 
 The loop stops when `r` and `h` change by less than `tol`. Every 1000 iterations, `α` is multiplied by 0.95, and `μ` is doubled if the restriction is still violated.
 
-Current parameters: `mu = 10`, `alpha = 1e-6`, `delta = 1e-5`, `tol = 1e-7`, at most 1,000,000 iterations per run.
+Current parameters: `mu = 10`, `alpha = 1e-6`, `delta = 1e-6`, `tol = 1e-7`, at most 1,000,000 iterations per run.
 
 ### Running
 

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random as rd
 
-delta = 1e-5
+delta = 1e-6
 tol = 1e-7
 temp1 = 0.0
 temp2 = 0.0
@@ -99,13 +99,13 @@ def plotting_fcn(r_array, h_array, cost_array):
     ax_h = fig.add_subplot(gs[1, 1])
 
     # Top: cost as points only. Faded red line represents the lowest possible cost, and two highlighted points represent the lowest and highest costs.
-    ax_cost.plot(runs, cost_array, "o", color="tab:blue", markersize=5, label="Final cost")
+    ax_cost.plot(runs, cost_array, "o", color="tab:blue", markersize=5, label="Cost achieved")
     ax_cost.axhline(42024.95, color="red", linestyle="-", alpha=0.4,
                     label="Lowest possible cost = 42024.95")
-    ax_cost.plot(runs[np.argmin(cost_array)], cost_array[np.argmin(cost_array)], "o", color="red", markersize=9,
-                 zorder=5, label=f"Lowest achieved = {cost_array[np.argmin(cost_array)]:.2f}")
-    ax_cost.plot(runs[np.argmax(cost_array)], cost_array[np.argmax(cost_array)], "o", color="orange", markersize=9,
-                 zorder=5, label=f"Highest achieved = {cost_array[np.argmax(cost_array)]:.2f}")
+    ax_cost.plot(runs[np.argmin(cost_array)], cost_array[np.argmin(cost_array)], "o", color="red", markersize=7,
+                 zorder=5, label=f"Lowest cost = {cost_array[np.argmin(cost_array)]:.2f}")
+    ax_cost.plot(runs[np.argmax(cost_array)], cost_array[np.argmax(cost_array)], "o", color="black", markersize=7,
+                 zorder=5, label=f"Highest cost = {cost_array[np.argmax(cost_array)]:.2f}")
     ax_cost.set_title("Final cost per run")
     ax_cost.set_xlabel("Iteration number")
     ax_cost.set_ylabel("Cost")
@@ -114,12 +114,12 @@ def plotting_fcn(r_array, h_array, cost_array):
     ax_cost.legend()
 
     # Bottom: r and h as lines only. Faded red line represents the average value, and the optimal points are shown with a red dot.
-    for ax, values, name, color in ((ax_r, r_array, "Radius r", "tab:green"),
-                                    (ax_h, h_array, "Height h", "tab:purple")):
+    for ax, values, name, color in ((ax_r, r_array, "Radius (r)", "tab:blue"),
+                                    (ax_h, h_array, "Height (h)", "tab:purple")):
         ax.plot(runs, values, "-", color=color, linewidth=1.5, label=name)
-        ax.axhline(np.mean(values), color="red", linestyle="-", alpha=0.4,
+        ax.axhline(np.mean(values), color="blue", linestyle="-", alpha=0.3,
                    label=f"Average = {np.mean(values):.4f}")
-        ax.plot(runs[np.argmin(cost_array)], values[np.argmin(cost_array)], "o", color="red", markersize=9,
+        ax.plot(runs[np.argmin(cost_array)], values[np.argmin(cost_array)], "o", color="red", markersize=7,
                 zorder=5, label=f"Optimal = {values[np.argmin(cost_array)]:.4f}")
         ax.set_title(f"{name} per run")
         ax.set_xlabel("Iteration number")

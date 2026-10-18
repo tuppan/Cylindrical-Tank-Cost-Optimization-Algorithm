@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import random as rd
 
 delta = 1e-6
-tol = 1e-3
+tol = 1e-7
 temp1 = 0.0
 temp2 = 0.0
 
@@ -52,24 +52,26 @@ def random_start():
 # Generate random values for r and h to start the optimization process.
 def gradient_method():
     global mu, alpha
-    mu = 10
-    alpha = 1e-7
+    mu = 10.0
+    alpha = float(1e-6)
     r, h = random_start()
     count = 0
     temp1 = r
     temp2 = h
-    for i in range (2000000):
+    for i in range (1000000):
         if i % 1000 == 0 and i > 0:
             alpha *= 0.9
             if restriction_fcn(r, h) > 0:
                 mu *= 1.1
         dr = partial_r_derivative(r, h, mu, delta)
         dh = partial_h_derivative(r, h, mu, delta)
-        if np.sqrt(dr**2 + dh**2) < tol:
-            break
-        # Code break if the gradient vector magnitude is low enough, meaning we are close to a local minimum
+
         r_new = r - alpha * dr
         h_new = h - alpha * dh
+
+        if abs(r_new - r) < tol and abs(h_new - h) < tol:
+            break
+            # Code break if the absolute difference between the new and old values of r and h is less than the tolerance level
         r = r_new
         h = h_new
         count += 1
@@ -82,13 +84,26 @@ def main():
     h_array = []
     cost_array = []
     count_array = []
+    explosion_count = 0
+    implosion_count = 0
     for i in range(reps):
         cost, r, h, count, temp1, temp2 = gradient_method()
         r_array.append(r)
         h_array.append(h)
+        if (np.pi * temp1**2 * temp2) < 500.0:
+            implosion_count += 1
         cost_array.append(cost)
+        if cost > 42800:
+            explosion_count += 1
         count_array.append(count)
         print(f"Iteration {i+1}: Initial values (r, h) = ({temp1:.2f}, {temp2:.2f}), Initial volume = {np.pi * temp1**2 * temp2:.2f} Cost = {cost_array[-1]:.2f}, Final values (r, h) = ({r_array[-1]:.2f}, {h_array[-1]:.2f}), Final Volume = {np.pi * r_array[-1]**2 * h_array[-1]:.2f}, Iterations = {count_array[-1]}")
+        print("------------------------------------------------------------")
+    print("Average cost = ", np.mean(cost_array))
+    print("Minimum cost = ", np.min(cost_array))
+    print("Max cost = ", np.max(cost_array))
+    print("average dimensions (r, h)= ", np.mean(r_array), np.mean(h_array))
+    print(f"Explosions: {explosion_count}")
+    print(f"Implosions: {implosion_count}")
+
 if True:
     main()
-

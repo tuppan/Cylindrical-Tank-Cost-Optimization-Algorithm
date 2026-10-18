@@ -23,7 +23,7 @@ def restriction_fcn(r, h):
 """
 Restriction function for the cylinder:
 g(r, h) = 500 - (pi * r² * h) <= 0
-Cylinder volume must be less than or equal to 500 m³.*
+Cylinder volume must be greater than or equal to 500 m³.
 """
 def penalization_fcn(r,h, mu):
     f = cost_fcn(r,h)
